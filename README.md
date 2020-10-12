@@ -1,4 +1,4 @@
-If you do not need docker swarm or k8s, but you want use docker secret, you have the alternative of use this project. 
+If you do not need docker swarm or k8s, but you really want to use docker secret, you have the alternative of use this project. 
 
 You need assign two environment:
 - "DIR_SECRET=/secret"
