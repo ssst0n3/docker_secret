@@ -7,7 +7,7 @@ You need assign two environment:
 The environment DIR_SECRET means where your secret will be saved, 
 and the environment SECRET will be split into an array which contains your secret file name. 
 
-you can see a example here:
+you can see an example here:
 * [docker-compose.yml](https://github.com/ssst0n3/docker_secret/blob/master/docker-compose.yml)
 
 you can pull compiled images here: 
