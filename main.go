@@ -1,9 +1,9 @@
 package main
 
 import (
-	"docker_secret/cert"
 	"github.com/ssst0n3/awesome_libs/awesome_error"
 	"github.com/ssst0n3/awesome_libs/secret"
+	"github.com/ssst0n3/docker_secret/cert"
 	"os"
 	"strings"
 )
