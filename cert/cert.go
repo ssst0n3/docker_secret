@@ -5,53 +5,95 @@ import (
 	"crypto/rand"
 	"crypto/rsa"
 	"crypto/x509"
+	"crypto/x509/pkix"
 	"encoding/pem"
 	"fmt"
 	"github.com/ssst0n3/awesome_libs/awesome_error"
 	"github.com/ssst0n3/awesome_libs/secret"
 	"io/ioutil"
 	"math/big"
+	"time"
 )
 
 func ParseEnv(e string) string {
 	return e[len("CERT_"):]
 }
 
-func GenerateCertificate() (ca []byte, key []byte, err error) {
-	certificate := &x509.Certificate{
-		SerialNumber: big.NewInt(2019),
+func CreateCertificateAuthority() (*x509.Certificate, *rsa.PrivateKey) {
+	ca := &x509.Certificate{
+		SerialNumber: big.NewInt(2020),
+		IsCA: true,
+		Subject: pkix.Name{
+			Organization:  []string{"Company, INC."},
+			Country:       []string{"US"},
+			Province:      []string{""},
+			Locality:      []string{"San Francisco"},
+			StreetAddress: []string{"Golden Gate Bridge"},
+			PostalCode:    []string{"94016"},
+		},
+		NotBefore:             time.Now(),
+		NotAfter:              time.Now().AddDate(10, 0, 0),
+		ExtKeyUsage:           []x509.ExtKeyUsage{x509.ExtKeyUsageClientAuth, x509.ExtKeyUsageServerAuth},
+		KeyUsage:              x509.KeyUsageDigitalSignature | x509.KeyUsageCertSign,
+		BasicConstraintsValid: true,
 	}
 	caPrivateKey, err := rsa.GenerateKey(rand.Reader, 4096)
 	if err != nil {
 		awesome_error.CheckErr(err)
-		return
+		return nil, nil
 	}
-	caBytes, err := x509.CreateCertificate(rand.Reader, certificate, certificate, &caPrivateKey.PublicKey, caPrivateKey)
+	return ca, caPrivateKey
+}
+
+func GenerateCertificate() (cert []byte, key []byte, err error) {
+	ca, caPrivateKey := CreateCertificateAuthority()
+	certificate := &x509.Certificate{
+		SerialNumber: big.NewInt(2020),
+		Subject: pkix.Name{
+			Organization:  []string{"Company, INC."},
+			Country:       []string{"US"},
+			Province:      []string{""},
+			Locality:      []string{"San Francisco"},
+			StreetAddress: []string{"Golden Gate Bridge"},
+			PostalCode:    []string{"94016"},
+		},
+		NotBefore:    time.Now(),
+		NotAfter:     time.Now().AddDate(10, 0, 0),
+		SubjectKeyId: []byte{1, 2, 3, 4, 6},
+		ExtKeyUsage:  []x509.ExtKeyUsage{x509.ExtKeyUsageClientAuth, x509.ExtKeyUsageServerAuth},
+		KeyUsage:     x509.KeyUsageDigitalSignature,
+	}
+	privateKey, err := rsa.GenerateKey(rand.Reader, 4096)
 	if err != nil {
 		awesome_error.CheckErr(err)
 		return
 	}
-	caPEM := new(bytes.Buffer)
-	err = pem.Encode(caPEM, &pem.Block{
+	certificateBytes, err := x509.CreateCertificate(rand.Reader, certificate, ca, &privateKey.PublicKey, caPrivateKey)
+	if err != nil {
+		awesome_error.CheckErr(err)
+		return
+	}
+	certificatePEM := new(bytes.Buffer)
+	err = pem.Encode(certificatePEM, &pem.Block{
 		Type:  "CERTIFICATE",
-		Bytes: caBytes,
+		Bytes: certificateBytes,
 	})
 	if err != nil {
 		awesome_error.CheckErr(err)
 		return
 	}
 
-	caPrivateKeyPEM := new(bytes.Buffer)
-	err = pem.Encode(caPrivateKeyPEM, &pem.Block{
+	privateKeyPEM := new(bytes.Buffer)
+	err = pem.Encode(privateKeyPEM, &pem.Block{
 		Type:  "RSA PRIVATE KEY",
-		Bytes: x509.MarshalPKCS1PrivateKey(caPrivateKey),
+		Bytes: x509.MarshalPKCS1PrivateKey(privateKey),
 	})
 	if err != nil {
 		awesome_error.CheckErr(err)
 		return
 	}
-	ca = caPEM.Bytes()
-	key = caPrivateKeyPEM.Bytes()
+	cert = certificatePEM.Bytes()
+	key = privateKeyPEM.Bytes()
 	return
 }
 
@@ -75,7 +117,7 @@ func WriteCertificate(certificateName string) (err error) {
 }
 
 func CertificateFileName(certificateName string) (string, string) {
-	return fmt.Sprintf("%s.cert", certificateName), fmt.Sprintf("%s.key", certificateName)
+	return fmt.Sprintf("%s.crt", certificateName), fmt.Sprintf("%s.key", certificateName)
 }
 
 func CertificateFilePath(certificateName string) (string, string) {
