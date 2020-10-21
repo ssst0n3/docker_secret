@@ -17,6 +17,3 @@ you can see an example here:
 
 you can pull compiled images here: 
 * [ssst0n3/docker_secret](https://hub.docker.com/repository/docker/ssst0n3/docker_secret/general)
-
-## todo
-- [ ] certificate
