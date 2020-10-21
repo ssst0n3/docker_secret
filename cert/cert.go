@@ -56,9 +56,7 @@ func GenerateCertificate() (ca []byte, key []byte, err error) {
 }
 
 func WriteCertificate(certificateName string) (err error) {
-	caFileName, keyFileName := CertificateFileName(certificateName)
-	caPath := secret.KeyFilePath(caFileName)
-	keyPath := secret.KeyFilePath(keyFileName)
+	caPath, keyPath := CertificateFilePath(certificateName)
 	ca, key, err := GenerateCertificate()
 	if err != nil {
 		return
@@ -78,6 +76,11 @@ func WriteCertificate(certificateName string) (err error) {
 
 func CertificateFileName(certificateName string) (string, string) {
 	return fmt.Sprintf("%s.cert", certificateName), fmt.Sprintf("%s.key", certificateName)
+}
+
+func CertificateFilePath(certificateName string) (string, string) {
+	caFileName, keyFileName := CertificateFileName(certificateName)
+	return secret.KeyFilePath(caFileName), secret.KeyFilePath(keyFileName)
 }
 
 func LoadCertificate(certificateName string) (err error) {
