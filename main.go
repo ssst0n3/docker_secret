@@ -19,7 +19,12 @@ func GetEnv() []string {
 func main() {
 	env := GetEnv()
 	for _, e := range env {
-		_, _, err := secret.LoadKey(e)
-		awesome_error.CheckFatal(err)
+		if strings.HasPrefix(e, "CERT_") {
+			certName := ParseEnv(e)
+			awesome_error.CheckFatal(LoadCertificate(certName))
+		} else {
+			_, _, err := secret.LoadKey(e)
+			awesome_error.CheckFatal(err)
+		}
 	}
 }

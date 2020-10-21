@@ -6,7 +6,7 @@ services:
     image: docker_secret
     environment:
       - "DIR_SECRET=/secret"
-      - "SECRET=MYSQL_PASSWORD_FILE,MYSQL_ROOT_PASSWORD_FILE"
+      - "SECRET=MYSQL_PASSWORD_FILE,MYSQL_ROOT_PASSWORD_FILE,CERT_EXAMPLE"
     volumes:
       - secret:/secret
 
