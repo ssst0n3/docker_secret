@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  secret:
+    build: .
+    image: ssst0n3/docker_secret:v1.2.0
+    environment:
+      - "DEVELOPMENT=true"
+      - "DIR_SECRET=/secret"
+      - "SECRET=MYSQL_PASSWORD_FILE,MYSQL_ROOT_PASSWORD_FILE,CERT_EXAMPLE"
+    volumes:
+      - secret:/secret
+      - /tmp/secret:/tmp/secret
+
+  db:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD_FILE: /secret/MYSQL_ROOT_PASSWORD_FILE
+      MYSQL_PASSWORD_FILE: /secret/MYSQL_PASSWORD_FILE
+      MYSQL_USER: test
+      MYSQL_DATABASE: test
+    volumes:
+      - secret:/secret
+    depends_on:
+      - secret
+
+volumes:
+  secret:
