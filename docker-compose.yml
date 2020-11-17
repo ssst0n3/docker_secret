@@ -3,7 +3,7 @@ version: '3'
 services:
   secret:
     build: .
-    image: ssst0n3/docker_secret:v1.2.0
+    image: ssst0n3/docker_secret:v1.3.0
     environment:
       - "DIR_SECRET=/secret"
       - "SECRET=MYSQL_PASSWORD_FILE,MYSQL_ROOT_PASSWORD_FILE,CERT_EXAMPLE"
