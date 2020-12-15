@@ -32,8 +32,10 @@ func GetEnv() {
 
 	envDevelopment := os.Getenv(EnvDevelopment)
 	Development, err = strconv.ParseBool(envDevelopment)
-
-	awesome_error.CheckFatal(err)
+	if err != nil {
+		awesome_error.CheckWarning(err)
+		Development = false
+	}
 }
 
 func main() {

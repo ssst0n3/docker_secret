@@ -6,6 +6,7 @@ services:
     image: ssst0n3/docker_secret:v1.3.0
     environment:
       - "DIR_SECRET=/secret"
+      - "DEVELOPMENT=false"
       - "SECRET=MYSQL_PASSWORD_FILE,MYSQL_ROOT_PASSWORD_FILE,CERT_EXAMPLE"
     volumes:
       - secret:/secret
