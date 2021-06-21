@@ -23,7 +23,8 @@ you can pull compiled images here:
 * [ssst0n3/docker_secret](https://hub.docker.com/repository/docker/ssst0n3/docker_secret/general)
 
 ## for test
-if you want to test your code, you can use environment DEVELOPMENT and set volume "/tmp/secret:/tmp/secret", we will copy all secrets to /tmp/secret/
+if you want to test your code, you can use environment DEVELOPMENT and set volume "/tmp/secret:/tmp/secret", 
+we will copy all secrets to /tmp/secret/, and set the permission to 0755.
 
 you can see example here: 
 * [docker-compose_test.yml](https://github.com/ssst0n3/docker_secret/blob/master/example/docker-compose_test.yml)

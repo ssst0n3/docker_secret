@@ -62,7 +62,7 @@ func main() {
 			}
 		}
 
-		err := lib.CopyFiles(sourceFilenameList, DirSecret, "/tmp/secret")
+		err := lib.CopyFiles(sourceFilenameList, DirSecret, "/tmp/secret", 0777)
 		awesome_error.CheckFatal(err)
 	}
 }

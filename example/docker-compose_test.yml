@@ -3,7 +3,7 @@ version: '3'
 services:
   secret:
     build: .
-    image: ssst0n3/docker_secret:v1.2.0
+    image: ssst0n3/docker_secret:v1.4.0
     environment:
       - "DEVELOPMENT=true"
       - "DIR_SECRET=/secret"
