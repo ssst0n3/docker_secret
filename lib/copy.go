@@ -5,6 +5,7 @@ import (
 	"github.com/ssst0n3/awesome_libs/awesome_error"
 	"io/fs"
 	"io/ioutil"
+	"os"
 )
 
 func CopyFile(sourcePath, dstPath string, perm fs.FileMode) error {
@@ -15,6 +16,11 @@ func CopyFile(sourcePath, dstPath string, perm fs.FileMode) error {
 	}
 
 	err = ioutil.WriteFile(dstPath, input, perm)
+	if err != nil {
+		awesome_error.CheckErr(err)
+		return err
+	}
+	err = os.Chmod(dstPath, 0777)
 	if err != nil {
 		awesome_error.CheckErr(err)
 		return err

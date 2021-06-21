@@ -61,8 +61,7 @@ func main() {
 				sourceFilenameList = append(sourceFilenameList, e)
 			}
 		}
-
-		err := lib.CopyFiles(sourceFilenameList, DirSecret, "/tmp/secret", 0777)
-		awesome_error.CheckFatal(err)
+		awesome_error.CheckFatal(os.Chmod("/tmp/secret", 0777))
+		awesome_error.CheckFatal(lib.CopyFiles(sourceFilenameList, DirSecret, "/tmp/secret", 0777))
 	}
 }
